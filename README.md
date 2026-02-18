@@ -2,6 +2,11 @@
 
 Seisimo is a personal project implementing a custom 6-bit text encoding format to better understand text encoding and bit manipulation.
 
+# POA
+
+- First Implement Fully in Python
+- Implement in C
+
 # Seisimo Mapping Table (WIP)
 
 | Decimal | Binary (6-bit) | Symbol |
