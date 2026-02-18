@@ -4,8 +4,8 @@ Seisimo is a personal project implementing a custom 6-bit text encoding format t
 
 # POA
 
-- First Implement Fully in Python
-- Implement in C
+1. Implement in Python
+2. Implement in C
 
 # Seisimo Mapping Table (WIP)
 
