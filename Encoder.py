@@ -14,9 +14,8 @@ a->1->000001
 
 '''
 
-from typing import BinaryIO
-from Translation import ascii_to_seis, seis_to_ascii
-from Constants import BUFFER, BITS_PER_SEIS_SYMBOL, SEIS_SYMBOLS_PER_BLOCK
+from translation import ascii_to_seis
+from constants import BUFFER, BITS_PER_SEIS_SYMBOL, SEIS_SYMBOLS_PER_BLOCK
 
 class Encoder:
     def __init__(self):

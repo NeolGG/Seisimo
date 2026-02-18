@@ -1,4 +1,4 @@
-from Constants import *
+from constants import *
 
 def ascii_to_seis(ascii_decimal: int) -> int:
     if 96 < ascii_decimal < 123:
