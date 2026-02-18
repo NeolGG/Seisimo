@@ -11,6 +11,7 @@ Seisimo is a personal project implementing a custom 6-bit text encoding format t
 
 | Decimal | Binary (6-bit) | Symbol |
 | ------- | -------------- | ------ |
+| 0       | 000000         | SP (space) |
 | 1       | 000001         | a      |
 | 2       | 000010         | b      |
 | 3       | 000011         | c      |
