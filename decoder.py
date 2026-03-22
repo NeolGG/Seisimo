@@ -7,7 +7,6 @@ class Decoder:
         self.block= 0
         self.total_symbol_count = 0
         self.result = None
-        self.symbols = None
     
     def decode(self, content: io.IOBase) -> str:
         self._reset_internal_variables()
@@ -23,18 +22,13 @@ class Decoder:
 
     def _read_block(self, content: io.IOBase, count: int):
         self.block = int.from_bytes(content.read(BYTES_PER_BLOCK), 'big')
-        self._translate_block(self.symbols, count)
-        self._flush_block()
-        
-    def _flush_block(self):
-        self.result.extend(self.symbols)
+        self._translate_block(count)
         self.block = 0
-        self.symbols = list()
-
-    def _translate_block(self, symbols: list, cycles: int):
+    
+    def _translate_block(self, cycles: int):
         shift = (SEIS_SYMBOLS_PER_BLOCK - 1) * BITS_PER_SEIS_SYMBOL
         for _ in range(cycles):
-            symbols.append(seis_to_char((self.block >> shift) & 0b00111111))
+            self.result.append(seis_to_char((self.block >> shift) & 0b00111111))
             shift -= BITS_PER_SEIS_SYMBOL
         
     def _get_header_value(self, content: io.IOBase) -> int:
@@ -55,5 +49,4 @@ class Decoder:
         self.block = 0
         self.total_symbol_count = 0
         self.result = list()
-        self.symbols = list()
         
