@@ -11,12 +11,12 @@ def char_to_seis(char: str) -> int:
     else:
         return 62
 
-def seis_to_ascii(seis_decimal: int) -> int:
-    if 0 < seis_decimal < 27:  
-        return seis_decimal + ALPHA_DISPLACEMENT
-    elif 26 < seis_decimal < 37:  
-        return seis_decimal + NUM_DISPLACEMENT
+def seis_to_char(seis_decimal: int) -> str:
+    if 0 < seis_decimal < 27:
+        return chr(seis_decimal + ALPHA_DISPLACEMENT)
+    elif 26 < seis_decimal < 37:
+        return chr(seis_decimal + NUM_DISPLACEMENT)
     elif seis_decimal == 0:
-        return 32
+        return ' '
     else:
-        return 0 
+        return ''

@@ -1,0 +1,59 @@
+import io
+from .translation import seis_to_char
+from .constants import BITS_PER_SEIS_SYMBOL, SEIS_SYMBOLS_PER_BLOCK, BYTES_PER_BLOCK
+
+class Decoder:
+    def __init__(self):
+        self.block= 0
+        self.total_symbol_count = 0
+        self.result = None
+        self.symbols = None
+    
+    def decode(self, content: io.IOBase) -> str:
+        self._reset_internal_variables()
+        self.total_symbol_count = self._get_header_value(content)
+        content.seek(4, io.SEEK_SET)
+        
+        remaining = self.total_symbol_count
+        while remaining > 0:
+            self._read_block(content, min(remaining, SEIS_SYMBOLS_PER_BLOCK))
+            remaining -= SEIS_SYMBOLS_PER_BLOCK
+
+        return "".join(self.result)
+
+    def _read_block(self, content: io.IOBase, count: int):
+        self.block = int.from_bytes(content.read(BYTES_PER_BLOCK), 'big')
+        self._translate_block(self.symbols, count)
+        self._flush_block()
+        
+    def _flush_block(self):
+        self.result.extend(self.symbols)
+        self.block = 0
+        self.symbols = list()
+
+    def _translate_block(self, symbols: list, cycles: int):
+        shift = (SEIS_SYMBOLS_PER_BLOCK - 1) * BITS_PER_SEIS_SYMBOL
+        for _ in range(cycles):
+            symbols.append(seis_to_char((self.block >> shift) & 0b00111111))
+            shift -= BITS_PER_SEIS_SYMBOL
+        
+    def _get_header_value(self, content: io.IOBase) -> int:
+        """
+        Reads the total seis symbol count from the file header.
+
+        :param content: A readable/seekable binary stream of encoded seis data.
+        :returns: The total number of seis symbols encoded in the file.
+        :note: Stream-safe — restores the stream position after reading.
+        """
+        curr = content.tell()
+        content.seek(0, io.SEEK_SET)
+        header_value = int.from_bytes(content.read(4), 'big')
+        content.seek(curr, io.SEEK_SET)
+        return header_value
+
+    def _reset_internal_variables(self):
+        self.block = 0
+        self.total_symbol_count = 0
+        self.result = list()
+        self.symbols = list()
+        
