@@ -11,12 +11,11 @@ class Decoder:
     def decode(self, content: io.IOBase) -> str:
         self._reset_internal_variables()
         self.total_symbol_count = self._get_header_value(content)
-        content.seek(4, io.SEEK_SET)
+        content.seek(4, io.SEEK_SET) # move stream to after header
         
-        remaining = self.total_symbol_count
-        while remaining > 0:
-            self._read_block(content, min(remaining, SEIS_SYMBOLS_PER_BLOCK))
-            remaining -= SEIS_SYMBOLS_PER_BLOCK
+        while self.total_symbol_count > 0:
+            self._read_block(content, min(self.total_symbol_count, SEIS_SYMBOLS_PER_BLOCK))
+            self.total_symbol_count -= SEIS_SYMBOLS_PER_BLOCK
 
         return "".join(self.result)
 
@@ -26,7 +25,8 @@ class Decoder:
         self.block = 0
     
     def _translate_block(self, cycles: int):
-        shift = (SEIS_SYMBOLS_PER_BLOCK - 1) * BITS_PER_SEIS_SYMBOL
+        # goes from left right to account for MSB
+        shift = (SEIS_SYMBOLS_PER_BLOCK - 1) * BITS_PER_SEIS_SYMBOL 
         for _ in range(cycles):
             self.result.append(seis_to_char((self.block >> shift) & 0b00111111))
             shift -= BITS_PER_SEIS_SYMBOL
