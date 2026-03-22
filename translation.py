@@ -1,4 +1,4 @@
-from .constants import *
+from .constants import ALPHA_DISPLACEMENT, NUM_DISPLACEMENT
 
 def char_to_seis(char: str) -> int:
     char = char.lower()

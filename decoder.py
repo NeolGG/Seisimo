@@ -1,6 +1,6 @@
 import io
 from .translation import seis_to_char
-from .constants import BITS_PER_SEIS_SYMBOL, SEIS_SYMBOLS_PER_BLOCK, BYTES_PER_BLOCK
+from .constants import BITS_PER_SEIS_SYMBOL, SEIS_SYMBOLS_PER_BLOCK, BYTES_PER_BLOCK, HEADER_SIZE
 
 class Decoder:
     def __init__(self):
@@ -10,7 +10,7 @@ class Decoder:
     
     def decode(self, content: io.IOBase) -> str:
         self._reset_internal_variables()
-        self.total_symbol_count = self._get_header_value(content)
+        self._get_header_value(content)
         content.seek(4, io.SEEK_SET) # move stream to after header
         
         while self.total_symbol_count > 0:
@@ -22,7 +22,7 @@ class Decoder:
     def _read_block(self, content: io.IOBase, count: int):
         self.block = int.from_bytes(content.read(BYTES_PER_BLOCK), 'big')
         self._translate_block(count)
-        self.block = 0
+        self.block = 0 #flush
     
     def _translate_block(self, cycles: int):
         # goes from left right to account for MSB
@@ -34,19 +34,20 @@ class Decoder:
     def _get_header_value(self, content: io.IOBase) -> int:
         """
         Reads the total seis symbol count from the file header.
+        sets internal total_symbol_count variable
 
         :param content: A readable/seekable binary stream of encoded seis data.
-        :returns: The total number of seis symbols encoded in the file.
-        :note: Stream-safe — restores the stream position after reading.
+        :note: Stream-safe,  restores the stream position after reading.
         """
         curr = content.tell()
         content.seek(0, io.SEEK_SET)
-        header_value = int.from_bytes(content.read(4), 'big')
+        header_value = int.from_bytes(content.read(HEADER_SIZE), 'big')
         content.seek(curr, io.SEEK_SET)
-        return header_value
+        self.total_symbol_count = header_value
 
     def _reset_internal_variables(self):
         self.block = 0
         self.total_symbol_count = 0
         self.result = list()
+        
         
