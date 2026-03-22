@@ -16,7 +16,7 @@ a->1->000001
 
 import io
 from .translation import char_to_seis
-from .constants import BITS_PER_SEIS_SYMBOL, SEIS_SYMBOLS_PER_BLOCK
+from .constants import BITS_PER_SEIS_SYMBOL, SEIS_SYMBOLS_PER_BLOCK,BYTES_PER_BLOCK
 
 class Encoder:
     def __init__(self):
@@ -53,7 +53,7 @@ class Encoder:
             self._flush_block()
 
     def _flush_block(self):
-        self.result.write(self.block.to_bytes(3, 'big'))
+        self.result.write(self.block.to_bytes(BYTES_PER_BLOCK, 'big'))
         self.block = 0
         self.symbols_in_block = 0
 
@@ -65,7 +65,7 @@ class Encoder:
     def _write_to_header(self, header_bytes: int):
         self.result.seek(0)
         self.result.write(header_bytes.to_bytes(4, "big"))
-        self.result.seek(0, 2)  # seek back to end
+        self.result.seek(0, io.SEEK_END)
 
 
 if __name__ == "__main__":
