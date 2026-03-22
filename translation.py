@@ -1,11 +1,12 @@
-from constants import *
+from .constants import *
 
-def ascii_to_seis(ascii_decimal: int) -> int:
-    if 96 < ascii_decimal < 123:
-        return ascii_decimal - ALPHA_DISPLACEMENT
-    elif 47 < ascii_decimal < 58:
-        return ascii_decimal - NUM_DISPLACEMENT
-    elif ascii_decimal == 32:
+def char_to_seis(char: str) -> int:
+    char = char.lower()
+    if char.isalpha():
+        return ord(char) - ALPHA_DISPLACEMENT
+    elif char.isdigit():
+        return ord(char) - NUM_DISPLACEMENT
+    elif char == ' ':
         return 0
     else:
         return 62

@@ -1,8 +1,11 @@
+from beartype.claw import beartype_this_package
+beartype_this_package()
+
 from .encoder import Encoder
-from .translation import ascii_to_seis, seis_to_ascii
+from .translation import char_to_seis, seis_to_ascii
 
 __all__ = [
     "Encoder",
-    "ascii_to_seis",
+    "char_to_seis",
     "seis_to_ascii",
 ]
