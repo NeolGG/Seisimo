@@ -11,7 +11,7 @@ class Decoder:
     def decode(self, content: io.IOBase) -> str:
         self._reset_internal_variables()
         self._get_header_value(content)
-        content.seek(4, io.SEEK_SET) # move stream to after header
+        content.seek(HEADER_SIZE, io.SEEK_SET) # move stream to after header
         
         while self.total_symbol_count > 0:
             self._read_block(content, min(self.total_symbol_count, SEIS_SYMBOLS_PER_BLOCK))
@@ -31,7 +31,7 @@ class Decoder:
             self.result.append(seis_to_char((self.block >> shift) & 0b00111111))
             shift -= BITS_PER_SEIS_SYMBOL
         
-    def _get_header_value(self, content: io.IOBase) -> int:
+    def _get_header_value(self, content: io.IOBase) -> None:
         """
         Reads the total seis symbol count from the file header.
         sets internal total_symbol_count variable

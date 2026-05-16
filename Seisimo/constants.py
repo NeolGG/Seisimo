@@ -1,3 +1,10 @@
+from enum import StrEnum
+
+class State(StrEnum):
+    NULL_b = "111110"
+    SPACE_b = "000000"
+    ALT_b = "111111"
+
 SEIS_SYMBOLS_PER_BLOCK = 4
 BITS_PER_SEIS_SYMBOL = 6
 BYTES_PER_BLOCK = 3
@@ -5,8 +12,6 @@ BUFFER = 512
 HEADER_SIZE = 4
 ALPHA_DISPLACEMENT = ord("a") - 1
 NUM_DISPLACEMENT = ord("0") - 27
-NULL_b = "111110"
-SPACE_b = "000000"
-ALT_b = "111111"
 BIT_BUFFER = 0
 COUNT = 0
+

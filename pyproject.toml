@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Seisimo"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "beartype==0.22.9",
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.0.2",
+]
