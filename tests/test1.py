@@ -14,6 +14,13 @@ def roundtrip(text: str) -> str:
 def test_roundtrip_sample1():
     assert roundtrip(sample1) == sample1
 
+def test_null():
+    assert roundtrip("") == ""
+
+def test_space_only():
+    result = roundtrip(" ")
+    assert result == " "
+
 def test_roundtrip_sample2():
     assert roundtrip(sample2) == sample2
 
@@ -27,11 +34,9 @@ def test_space():
     assert roundtrip('hello world') == 'hello world'
 
 def test_full_block():
-    # exactly 4 symbols — no leftover
     assert roundtrip('abcd') == 'abcd'
 
 def test_partial_block():
-    # 1, 2, 3 symbols — exercises leftover path
     assert roundtrip('a') == 'a'
     assert roundtrip('ab') == 'ab'
     assert roundtrip('abc') == 'abc'
@@ -40,7 +45,5 @@ def test_numbers():
     assert roundtrip('abc 123') == 'abc 123'
 
 def test_unknown_chars_ignored():
-    # punctuation encodes to 62 (null), decodes to ''
-    result = roundtrip('hi!')
-    assert result == 'hi'
+    assert roundtrip('hi!') == 'hi'
 
